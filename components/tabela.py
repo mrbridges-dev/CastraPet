@@ -19,23 +19,10 @@ def exibir_tabela_animais():
         
         # Criando o card
         with col:
-            with st.container():
-                st.markdown("""
-                    <style>
-                        .animal-card {
-                            background-color: #f0f2f6;
-                            border-radius: 10px;
-                            padding: 20px;
-                            margin-bottom: 20px;
-                        }
-                    </style>
-                """, unsafe_allow_html=True)
-                
-                with st.container():
-                    st.markdown('<div class="animal-card">', unsafe_allow_html=True)
+                with st.container(height=200, border=True):
                     
                     # Criando colunas dentro do card
-                    img_col, info_col = st.columns([4, 6])
+                    img_col, info_col, button_col = st.columns(3)
                     
                     # Coluna da imagem
                     with img_col:
@@ -53,9 +40,8 @@ def exibir_tabela_animais():
                         st.markdown(f"**Espécie:** {animal['especie']}")
                         st.markdown(f"**Idade:** {animal['idade']} anos")
                         st.markdown(f"**Status:** {animal['status']}")
-                        st.markdown(f"**Localização:** {animal['localizacao']}")
                         
-                        # Botões de ação em linha única
+                    with button_col:    # Botões de ação em linha única
                         if st.button("✏️ Editar", key=f"edit_{animal['id']}"):
                             st.session_state.show_modal = True
                             st.session_state.editing_animal_id = animal['id']
@@ -73,5 +59,3 @@ def exibir_tabela_animais():
                             
                             st.success("Animal deletado com sucesso!")
                             st.rerun()
-                    
-                    st.markdown('</div>', unsafe_allow_html=True)
