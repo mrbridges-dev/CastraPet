@@ -1,13 +1,14 @@
 import mysql.connector
 from datetime import date
+import os
 
 # Conecta ao banco de dados
 conn = mysql.connector.connect(
-    host="localhost",
-    port=3306,
-    user="root",      # Substitua pelo seu usuário do MySQL
-    password="root",    # Substitua pela sua senha do MySQL
-    database="castrapet"
+    host=os.getenv("DB_HOST"),
+    port=os.getenv("DB_PORT"),
+    user=os.getenv("DB_USER"),    # Substitua pelo seu usuário do MySQL
+    password=os.getenv("DB_PASSWORD"),    # Substitua pela sua senha do MySQL
+    database=os.getenv("DB_NAME")
 )
 cursor = conn.cursor(dictionary=True)
 

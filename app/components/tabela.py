@@ -10,12 +10,17 @@ def exibir_tabela_animais():
         return
 
     # Criando um container para os cards
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3, gap="small")
     
     # Distribuindo os cards entre as colunas
     for i, animal in enumerate(animais):
         # Alternando entre as colunas
-        col = col1 if i % 2 == 0 else col2
+        if i % 3 == 0:
+            col = col1
+        elif i % 3 == 1:
+            col = col2
+        else:
+            col = col3
         
         # Criando o card
         with col:
@@ -28,19 +33,26 @@ def exibir_tabela_animais():
                     with img_col:
                         if animal['foto'] and os.path.exists(os.path.join('assets', 'img', animal['foto'])):
                             st.image(os.path.join('assets', 'img', animal['foto']), 
-                                   width=200,
+                                   width=300,
                                    output_format="JPEG",
                                    use_container_width=False)
                         else:
                             st.markdown("📷 Sem foto")
                     
                     # Coluna das informações
-                    with info_col:
-                        st.markdown(f"### {animal['nome']}")
-                        st.markdown(f"**Espécie:** {animal['especie']}")
-                        st.markdown(f"**Idade:** {animal['idade']} anos")
-                        st.markdown(f"**Status:** {animal['status']}")
-                        
+                with info_col:
+                    st.markdown(
+                        f"""
+                        <div style="font-size:16px; line-height:1.5; margin-bottom:10px;">
+                            <strong>{animal['nome']}</strong><br>
+                            Espécie: {animal['especie']}<br>
+                            Idade: {animal['idade']} anos<br>
+                            Status: {animal['status']}
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+                
                     with button_col:    # Botões de ação em linha única
                         if st.button("✏️ Editar", key=f"edit_{animal['id']}"):
                             st.session_state.show_modal = True
