@@ -5,6 +5,9 @@ from datetime import datetime
 import folium
 from streamlit_folium import folium_static, st_folium
 from folium.plugins import MousePosition
+from PIL import Image  # <-- Adiciona PIL para redimensionamento
+import cv2
+import numpy as np
 
 @st.dialog("Cadastro de Animal")
 def exibir_formulario(animal_id=None):
@@ -85,12 +88,12 @@ def exibir_formulario(animal_id=None):
         # Campo para upload de foto
         foto_file = st.file_uploader("Foto do animal", type=['png', 'jpg', 'jpeg'])
         
-        # Se for edição, mostra a foto atual
-        if animal and animal['foto']:
-            st.write("Foto atual:")
-            caminho_foto_atual = os.path.join('assets', 'img', animal['foto'])
-            if os.path.exists(caminho_foto_atual):
-                st.image(caminho_foto_atual, width=200)
+        ## Se for edição, mostra a foto atual
+        #if animal and animal['foto']:
+        #    st.write("Foto atual:")
+        #    caminho_foto_atual = os.path.join('assets', 'img', animal['foto'])
+        #    if os.path.exists(caminho_foto_atual):
+        #        st.image(caminho_foto_atual, width=200)
         
         # Botão de submit com texto apropriado
         submit_label = "Salvar" if animal_id else "Cadastrar"
@@ -107,16 +110,23 @@ def exibir_formulario(animal_id=None):
                 if foto_file is not None:
                     diretorio_uploads = os.path.join('assets', 'img', 'uploads')
                     os.makedirs(diretorio_uploads, exist_ok=True)
-                    
                     extensao = os.path.splitext(foto_file.name)[1]
                     novo_nome = f"{datetime.now().strftime('%Y%m%d_%H%M%S')}{extensao}"
                     caminho_foto = os.path.join(diretorio_uploads, novo_nome)
-                    
-                    with open(caminho_foto, "wb") as f:
-                        f.write(foto_file.getbuffer())
-                    
-                    caminho_foto = os.path.join('uploads', novo_nome)
 
+                    # Crop centralizado (quadrado) na imagem
+                    img_pil = Image.open(foto_file).convert('RGB')
+                    largura, altura = img_pil.size
+                    lado = min(largura, altura)
+                    left = (largura - lado) // 2
+                    top = (altura - lado) // 2
+                    right = left + lado
+                    bottom = top + lado
+                    img_cortada = img_pil.crop((left, top, right, bottom))
+                    img_cortada = img_cortada.resize((300, 300), Image.LANCZOS)
+                    img_cortada.save(caminho_foto, format='JPEG', quality=90)
+
+                    caminho_foto = os.path.join('uploads', novo_nome)
                 # Usa as coordenadas atualizadas do session_state
                 latitude, longitude = st.session_state.selected_location
                 st.write(f"Debug - Coordenadas: {latitude}, {longitude}")  # Debug temporário

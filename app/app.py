@@ -10,6 +10,15 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+# Esconde o botão Deploy e o menu de três pontos do Streamlit
+st.markdown("""
+    <style>
+    [data-testid="stDeployButton"], [data-testid="stHeader"], [data-testid="stToolbar"] {
+        display: none !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # Configuração da navegação
 st.sidebar.title("🐾 CastraPet")
 st.sidebar.divider()

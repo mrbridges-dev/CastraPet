@@ -29,13 +29,13 @@ def exibir_tabela_animais():
                 with st.container(height=260, border=True):
                     
                     # Criando colunas dentro do card
-                    img_col, info_col= st.columns(2, gap="large")
+                    img_col, info_col= st.columns(2,)
                     
                     # Coluna da imagem
                     with img_col:
                         if animal['foto'] and os.path.exists(os.path.join('assets', 'img', animal['foto'])):
                             st.image(os.path.join('assets', 'img', animal['foto']),
-                                    width = 150,
+                                    width = 200,
                                    output_format="JPEG")
                         else:
                             st.markdown("📷 Sem foto")

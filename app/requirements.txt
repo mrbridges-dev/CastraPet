@@ -3,3 +3,6 @@ mysql-connector-python==8.2.0
 folium==0.15.1
 streamlit-folium==0.18.0
 python-dotenv
+Pillow
+opencv-python
+numpy
